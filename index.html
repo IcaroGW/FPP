@@ -757,9 +757,9 @@
     document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
     document.querySelector(`.theme-btn[data-theme="${theme}"]`).classList.add('active');
     if (!allNodes.length) return;
-    // Update links colors
+   
     rebuildLinks();
-    // Update node colors in-place — preserves positions, avoids flash
+   
     nodesG.selectAll('.node-group').each(function(d) {
       const bg = nodeBg(d), tc = nodeTxt(d);
       d3.select(this).select('.node-rect').attr('fill', bg);
@@ -1185,7 +1185,7 @@
       const totalH = h + barH;
       const bg=nodeBg(d), tc=nodeTxt(d);
 
-      // Per-node clipPath so the bar overlay respects the pill's rounded corners
+      
       const clipId = `pc-${d.id}`;
       g.append('defs')
         .append('clipPath').attr('id', clipId)
@@ -1195,7 +1195,7 @@
           .attr('width', w).attr('height', totalH)
           .attr('rx', rx).attr('ry', rx);
 
-      // Full pill background (content area + bar area) with drop shadow
+      
       g.append('rect')
         .attr('class','node-rect')
         .attr('x',-w/2).attr('y',-h/2)
@@ -1204,7 +1204,7 @@
         .attr('fill',bg)
         .attr('filter','url(#node-shadow)');
 
-      // Bottom bar — darker overlay, clipped to pill shape
+      
       if (d.summary) {
         g.append('rect')
           .attr('class', 'node-bar-rect')
@@ -1250,7 +1250,7 @@
         }
       });
 
-      // Bar label: always visible, click to expand/collapse summary
+      
       if (d.summary) {
         const barLabelFS = [11, 10, 10][lv];
         g.append('text')
@@ -1272,7 +1272,7 @@
             toggleNodeSummary(d3.select(this.closest('.node-group')));
           });
 
-        // foreignObject com height generoso; altura real medida por scrollHeight no expand
+        
         g.append('foreignObject')
           .attr('class', 'node-summary-fo')
           .attr('x', -w/2).attr('y', h/2 + barH)
@@ -1319,7 +1319,7 @@
     const barLabel = gSel.select('.node-bar-label');
 
     if (d.expanded) {
-      // Mede altura real do conteúdo (scrollHeight do div interno)
+      
       const wrapEl = sfo.select('.node-summary-wrap').node();
       const measuredH = wrapEl ? Math.max(wrapEl.scrollHeight, 60) : 100;
       d.expandedH = measuredH;
