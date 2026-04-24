@@ -1,0 +1,1493 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sustentabilidade &amp; Direitos Humanos — Mapa Mental Interativo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/light-border.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    [data-theme="slate"] {
+      --bg:              #1a1a1b;
+      --text-primary:    #f0ede8;
+      --text-secondary:  #b8b2a8;
+      --text-muted:      #6e6860;
+      --accent1:         #8fa8b8;
+      --accent2:         #6b8898;
+      --border:          rgba(143,168,184,0.18);
+      --border-strong:   rgba(143,168,184,0.35);
+      --shadow:          rgba(0,0,0,0.65);
+      --node-center-bg:  #2e4a5e;
+      --node-center-txt: #e8f4fc;
+      --node-axis-bg-dh:   #3a5240;
+      --node-axis-bg-sust: #2e4a5e;
+      --node-axis-bg-vuln: #4a3a2a;
+      --node-axis-bg-mob:  #3a3050;
+      --node-axis-bg-sassen: #3a2a40;
+      --node-axis-bg-claro:  #1e3a3a;
+      --node-axis-bg-jur:    #3a2020;
+      --node-axis-txt: #dff0e8;
+      --node-sub-bg:     #2a2a2e;
+      --node-sub-mob:    #1a2840;
+      --node-sub-sassen: #251825;
+      --node-sub-claro:  #0e2525;
+      --node-sub-jur:    #251414;
+      --node-sub-vuln:   #2a2018;
+      --node-sub-txt:    #c8c0b8;
+      --node-border:     #4a4a4a;
+      --link-main:       rgba(143,168,184,0.55);
+      --link-sub:        rgba(143,168,184,0.28);
+      --link-cross:      rgba(180,150,100,0.45);
+      --panel-bg:        #212123;
+      --panel-border:    rgba(143,168,184,0.2);
+      --header-bg:       #111112;
+      --header-text:     #f0ede8;
+      --footer-bg:       rgba(10,10,11,0.92);
+      --footer-text:     #7a7068;
+      --footer-label:    #e8e4de;
+      --footer-sublabel: #a8a098;
+      --tooltip-bg:      #111112;
+      --tooltip-text:    #f0ede8;
+      --tag-bg:          rgba(143,168,184,0.12);
+      --tag-text:        #8fa8b8;
+    }
+
+    [data-theme="paper"] {
+      --bg:              #f5f2eb;
+      --text-primary:    #1a1208;
+      --text-secondary:  #3d2e18;
+      --text-muted:      #7a6850;
+      --accent1:         #5c3d1e;
+      --accent2:         #8a6030;
+      --border:          rgba(92,61,30,0.15);
+      --border-strong:   rgba(92,61,30,0.3);
+      --shadow:          rgba(26,18,8,0.14);
+      --node-center-bg:  #5c3d1e;
+      --node-center-txt: #fff9f0;
+      --node-axis-bg-dh:   #3b6e45;
+      --node-axis-bg-sust: #4a7a40;
+      --node-axis-bg-vuln: #8a4030;
+      --node-axis-bg-mob:  #3a5880;
+      --node-axis-bg-sassen: #6a3a70;
+      --node-axis-bg-claro:  #2a6060;
+      --node-axis-bg-jur:    #7a3030;
+      --node-axis-txt: #f0fff4;
+      --node-sub-bg:     #8a6030;
+      --node-sub-mob:    #2a3d5c;
+      --node-sub-sassen: #4a2855;
+      --node-sub-claro:  #1e4a4a;
+      --node-sub-jur:    #5a2222;
+      --node-sub-vuln:   #4a3018;
+      --node-sub-txt:    #fff8ef;
+      --node-border:     rgba(92,61,30,0.4);
+      --link-main:       rgba(92,61,30,0.5);
+      --link-sub:        rgba(138,96,48,0.35);
+      --link-cross:      rgba(150,80,80,0.5);
+      --panel-bg:        #fdfaf5;
+      --panel-border:    rgba(92,61,30,0.18);
+      --header-bg:       #1a1208;
+      --header-text:     #f5f0e8;
+      --footer-bg:       rgba(26,18,8,0.9);
+      --footer-text:     #c8b898;
+      --footer-label:    #f0e8d4;
+      --footer-sublabel: #c8b898;
+      --tooltip-bg:      #1a1208;
+      --tooltip-text:    #f5f0e8;
+      --tag-bg:          rgba(92,61,30,0.1);
+      --tag-text:        #5c3d1e;
+    }
+
+    [data-theme="ocean"] {
+      --bg:              #0a1520;
+      --text-primary:    #e0eef8;
+      --text-secondary:  #8ab4cc;
+      --text-muted:      #4a7a9a;
+      --accent1:         #00c4e8;
+      --accent2:         #0088c8;
+      --border:          rgba(0,196,232,0.15);
+      --border-strong:   rgba(0,196,232,0.3);
+      --shadow:          rgba(0,0,0,0.55);
+      --node-center-bg:  #00c4e8;
+      --node-center-txt: #041018;
+      --node-axis-bg-dh:   #00506e;
+      --node-axis-bg-sust: #006050;
+      --node-axis-bg-vuln: #5e3020;
+      --node-axis-bg-mob:  #203860;
+      --node-axis-bg-sassen: #502060;
+      --node-axis-bg-claro:  #005050;
+      --node-axis-bg-jur:    #602020;
+      --node-axis-txt: #e0f4ff;
+      --node-sub-bg:     #003854;
+      --node-sub-txt:    #c0e0f0;
+      --node-border:     rgba(0,196,232,0.3);
+      --link-main:       rgba(0,196,232,0.45);
+      --link-sub:        rgba(0,136,200,0.3);
+      --link-cross:      rgba(200,150,50,0.5);
+      --panel-bg:        #0d1e2e;
+      --panel-border:    rgba(0,196,232,0.2);
+      --header-bg:       #050f18;
+      --header-text:     #e0eef8;
+      --footer-bg:       rgba(5,15,24,0.9);
+      --footer-text:     #4a7a9a;
+      --tooltip-bg:      #050f18;
+      --tooltip-text:    #e0eef8;
+      --tag-bg:          rgba(0,196,232,0.12);
+      --tag-text:        #00c4e8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      transition: background 0.4s, color 0.4s;
+    }
+
+    #app { display: flex; flex-direction: column; height: 100vh; height: 100svh; }
+
+    #header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      flex-shrink: 0;
+      z-index: 200;
+      border-bottom: 2px solid var(--accent1);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #header-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    #header-title {
+      font-family: 'Lora', serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--header-text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #header-subtitle {
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.45;
+      white-space: nowrap;
+    }
+    #header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 13px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.7);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
+    .theme-btn.active { background: var(--accent1); border-color: var(--accent1); color: #fff; }
+    .theme-btn svg, .theme-btn i { width: 12px; height: 12px; flex-shrink: 0; stroke: currentColor; }
+
+    .header-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.12); margin: 0 2px; }
+
+    #btn-recenter {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 13px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+    }
+    #btn-recenter:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    #btn-recenter svg, #btn-recenter i { width: 12px; height: 12px; flex-shrink: 0; stroke: currentColor; }
+    .btn-label { }
+
+    .btn-zoom {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-zoom:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    #zoom-controls-map {
+      position: absolute;
+      bottom: 24px; right: 16px;
+      z-index: 25;
+      display: flex; flex-direction: column; gap: 3px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 5px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #zoom-controls-map button {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    #zoom-controls-map button:hover { background: var(--tag-bg); border-color: var(--border); color: var(--text-primary); }
+    #zoom-controls-map button:active { transform: scale(0.92); }
+    #zoom-controls-map button i, #zoom-controls-map button svg { width: 15px; height: 15px; stroke: currentColor; flex-shrink: 0; }
+    .zoom-ctrl-divider { height: 1px; background: var(--border); margin: 2px 4px; }
+    @media (max-width: 768px) { #zoom-controls-map { display: none; } }
+
+    #content-area { flex: 1; display: flex; overflow: hidden; position: relative; }
+    #graph-area { flex: 1; position: relative; overflow: hidden; }
+
+    #map-svg {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      background: var(--bg);
+      touch-action: none;
+      transition: background 0.4s;
+    }
+    #map-svg:active { cursor: grabbing; }
+
+    .node-group { cursor: pointer; overflow: visible; }
+    .node-rect { transition: filter 0.2s; }
+    .node-group:hover .node-rect { filter: brightness(1.18) drop-shadow(0 3px 8px rgba(0,0,0,0.25)); }
+    .node-group.faded .node-rect { opacity: 0.1; }
+    .node-group.faded text { opacity: 0.1; }
+    .node-group.faded .node-icon-fo { opacity: 0.1; }
+
+    .node-label-text {
+      pointer-events: none;
+      user-select: none;
+      transition: opacity 0.3s;
+    }
+    .node-icon-fo { transition: opacity 0.3s; pointer-events: none; overflow: visible; }
+
+    .link { fill: none; pointer-events: none; transition: opacity 0.3s; }
+    .link.faded { opacity: 0.06 !important; }
+    .link.highlighted { opacity: 1 !important; }
+
+    #interaction-hint {
+      position: absolute;
+      bottom: 54px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+      pointer-events: none;
+      opacity: 0.85;
+      white-space: nowrap;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      backdrop-filter: blur(8px);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #interaction-hint span { display: flex; align-items: center; gap: 4px; }
+    #interaction-hint svg, #interaction-hint i { width: 12px; height: 12px; stroke: currentColor; }
+
+    #onboarding {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+    #onboarding-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 32px 36px;
+      max-width: 460px;
+      width: 90%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    #onboarding-icon {
+      margin: 0 auto 16px;
+      width: 48px;
+      height: 48px;
+      background: var(--tag-bg);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent1);
+    }
+    #onboarding-icon svg, #onboarding-icon i { width: 24px; height: 24px; stroke: currentColor; }
+    #onboarding-title {
+      font-family: 'Lora', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    #onboarding-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.6; }
+
+    .onboarding-tips { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; text-align: left; }
+    .onboarding-tip { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-secondary); }
+    .tip-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--tag-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent1);
+    }
+    .tip-icon svg, .tip-icon i { width: 15px; height: 15px; stroke: currentColor; }
+
+    #onboarding-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent1);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s;
+    }
+    #onboarding-btn:hover { opacity: 0.85; }
+    #onboarding-btn svg, #onboarding-btn i { width: 14px; height: 14px; stroke: currentColor; }
+    #onboarding-auto { margin-top: 10px; font-size: 11px; color: var(--text-muted); opacity: 0.55; }
+
+    #help-fab {
+      display: none;
+      position: absolute;
+      bottom: 54px;
+      right: 14px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent1);
+      color: #fff;
+      border: none;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 20;
+      box-shadow: 0 2px 10px var(--shadow);
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    #help-panel {
+      display: none;
+      position: absolute;
+      bottom: 100px;
+      right: 14px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      z-index: 20;
+      flex-direction: column;
+      gap: 8px;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+    #help-panel.open { display: flex; }
+    #help-panel span { display: flex; align-items: center; gap: 7px; }
+    #help-panel i, #help-panel svg { width: 13px; height: 13px; stroke: currentColor; flex-shrink: 0; }
+
+    #legend {
+      position: absolute;
+      bottom: 54px;
+      left: 20px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      z-index: 50;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    #legend-title { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 7px; }
+    .legend-item { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+    .legend-item:last-child { margin-bottom: 0; }
+    .legend-pill { height: 6px; border-radius: 3px; flex-shrink: 0; }
+    .legend-label { font-size: 10px; color: var(--text-secondary); }
+
+    #side-panel {
+      width: 420px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--panel-bg);
+      border-left: 1px solid var(--panel-border);
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      z-index: 100;
+      box-shadow: -4px 0 24px var(--shadow);
+      transition: background 0.4s, border-color 0.4s;
+      will-change: transform;
+    }
+    #panel-header { padding: 20px 22px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; }
+    #panel-breadcrumb { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 8px; }
+    #panel-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      border-radius: 3px;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      margin-bottom: 10px;
+    }
+    #panel-eyebrow svg, #panel-eyebrow i { width: 11px; height: 11px; stroke: currentColor; }
+    #panel-title { font-family: 'Lora', serif; font-size: 19px; font-weight: 700; color: var(--text-primary); line-height: 1.3; margin-bottom: 4px; }
+    #panel-close {
+      position: absolute; top: 16px; right: 16px;
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    #panel-close:hover { border-color: var(--accent1); color: var(--accent1); }
+    #panel-close svg, #panel-close i { width: 14px; height: 14px; stroke: currentColor; }
+    #panel-body { flex: 1; overflow-y: auto; padding: 18px 22px 24px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+    #panel-body::-webkit-scrollbar { width: 3px; }
+    #panel-body::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+    .panel-section { margin-bottom: 22px; }
+    .panel-section-label {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--text-muted); margin-bottom: 8px; padding-bottom: 5px;
+      border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px;
+    }
+    .section-marker { width: 3px; height: 12px; border-radius: 2px; background: var(--accent1); flex-shrink: 0; }
+    .panel-section p { font-family: 'Lora', serif; font-size: 14px; line-height: 1.85; color: var(--text-secondary); margin-bottom: 12px; }
+    .panel-section p:last-child { margin-bottom: 0; }
+    .panel-section p strong { font-weight: 700; color: var(--text-primary); }
+    .panel-section p em { font-style: italic; color: var(--accent1); }
+    #panel-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px 30px; text-align: center; gap: 14px; }
+    #panel-empty-icon { color: var(--accent1); opacity: 0.35; }
+    #panel-empty-icon svg, #panel-empty-icon i { width: 36px; height: 36px; stroke: currentColor; }
+    #panel-empty p { font-family: 'Lora', serif; font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    #panel-empty-arrow {
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      opacity: 0.45; animation: bob 2s ease-in-out infinite; color: var(--accent1);
+    }
+    #panel-empty-arrow svg, #panel-empty-arrow i { width: 20px; height: 20px; stroke: currentColor; }
+    #panel-empty-arrow span { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+    @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(7px); } }
+
+    #footer {
+      background: var(--footer-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      color: var(--footer-text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 0 24px;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+      min-height: 34px;
+      flex-shrink: 0;
+      z-index: 200;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    #footer-copyright { font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; color: var(--footer-label); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    #footer-right { font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase; color: var(--footer-sublabel); white-space: nowrap; flex-shrink: 0; }
+
+    .tippy-box[data-theme~='academic'] {
+      background: var(--tooltip-bg, #111);
+      color: var(--tooltip-text, #f9f7f1);
+      font-family: 'Lora', serif;
+      font-size: 13px;
+      line-height: 1.6;
+      border-radius: 6px;
+      max-width: 260px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .tippy-box[data-theme~='academic'] .tippy-content { padding: 10px 14px; }
+    .tippy-box[data-theme~='academic'] .tippy-arrow { color: var(--tooltip-bg, #111); }
+
+    @media (max-width: 900px) { #header { padding: 0 16px; height: 52px; } }
+    @media (min-width: 769px) {
+      .btn-zoom { display: inline-flex; }
+    }
+    @media (max-width: 768px) {
+      #header { padding: 0 12px; height: 50px; }
+      #header-subtitle { display: none; }
+      #header-right { gap: 4px; }
+      .btn-label { display: none; }
+      .theme-btn { padding: 6px 8px; gap: 0; }
+      #btn-recenter { padding: 6px 8px; gap: 0; }
+      .header-sep { margin: 0 1px; }
+      #side-panel { width: 100%; top: 0; z-index: 300; }
+      #legend { bottom: 42px; left: 10px; padding: 8px 10px; }
+      .legend-label { font-size: 9px; }
+      #interaction-hint { font-size: 10px; padding: 6px 12px; gap: 10px; }
+      #help-fab { display: flex; }
+      #footer { padding: 6px 14px; padding-bottom: env(safe-area-inset-bottom, 6px); min-height: 42px; flex-wrap: wrap; gap: 2px 8px; }
+      #footer-copyright { font-size: 10px; }
+      #footer-right { font-size: 9px; display: block; }
+      #onboarding-card { padding: 24px 20px; }
+    }
+    @media (max-width: 480px) {
+      #header-title { font-size: 12px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; }
+      .header-sep { display: none; }
+      #legend { display: none; }
+      #interaction-hint { display: none; }
+      #help-fab { display: flex; }
+    }
+    @media (max-height: 500px) and (orientation: landscape) {
+      #header { height: 44px; }
+      #footer { min-height: 26px; }
+      #footer-right { display: none; }
+    }
+  </style>
+</head>
+<body data-theme="paper">
+
+<div id="onboarding">
+  <div id="onboarding-card">
+    <div id="onboarding-icon"><i data-lucide="map"></i></div>
+    <div id="onboarding-title">Mapa Mental Interativo</div>
+    <div id="onboarding-sub">Explore a intersecção entre Direitos Humanos e Sustentabilidade. Cada nó revela uma análise acadêmica fundamentada.</div>
+    <div class="onboarding-tips">
+      <div class="onboarding-tip">
+        <div class="tip-icon"><i data-lucide="mouse-pointer-click"></i></div>
+        <span><strong>Clique</strong> em qualquer nó para ler a síntese acadêmica completa</span>
+      </div>
+      <div class="onboarding-tip">
+        <div class="tip-icon"><i data-lucide="move"></i></div>
+        <span><strong>Arraste</strong> os nós para reorganizar o mapa (funciona no celular)</span>
+      </div>
+      <div class="onboarding-tip">
+        <div class="tip-icon"><i data-lucide="zoom-in"></i></div>
+        <span><strong>Scroll</strong> ou pinça para ajustar o zoom</span>
+      </div>
+    </div>
+    <button id="onboarding-btn"><i data-lucide="arrow-right"></i> Explorar o mapa</button>
+    <div id="onboarding-auto">Clique em qualquer lugar para fechar</div>
+  </div>
+</div>
+
+<div id="app">
+
+  <header id="header">
+    <div id="header-left">
+      <span id="header-title">Sustentabilidade &amp; Direitos Humanos</span>
+      <span id="header-subtitle">Mapa Mental Interativo </span>
+    </div>
+    <div id="header-right">
+      <button class="theme-btn" data-theme="slate"><i data-lucide="moon"></i><span class="btn-label">Escuro</span></button>
+      <button class="theme-btn active" data-theme="paper"><i data-lucide="sun"></i><span class="btn-label">Claro</span></button>
+      <div class="header-sep"></div>
+      <button id="btn-recenter"><i data-lucide="crosshair"></i><span class="btn-label">Centralizar</span></button>
+    </div>
+  </header>
+
+  <div id="content-area">
+
+    <div id="graph-area">
+      <svg id="map-svg">
+        <defs>
+          <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="var(--shadow)" flood-opacity="0.5" />
+          </filter>
+        </defs>
+        <g id="zoom-layer">
+          <g id="links-layer"></g>
+          <g id="nodes-layer"></g>
+        </g>
+      </svg>
+
+      <div id="zoom-controls-map">
+        <button id="btn-zoom-in" title="Aproximar"><i data-lucide="plus"></i></button>
+        <div class="zoom-ctrl-divider"></div>
+        <button id="btn-zoom-out" title="Afastar"><i data-lucide="minus"></i></button>
+      </div>
+
+      <div id="interaction-hint">
+        <span><i data-lucide="mouse-pointer-2"></i> Clique</span>
+        <span><i data-lucide="move"></i> Arraste</span>
+        <span><i data-lucide="zoom-in"></i> Zoom</span>
+      </div>
+
+      <button id="help-fab" aria-label="Ajuda de navegação">?</button>
+      <div id="help-panel">
+        <span><i data-lucide="hand"></i> Toque num nó para abrir</span>
+        <span><i data-lucide="move"></i> Arraste nós para mover</span>
+        <span><i data-lucide="zoom-in"></i> Pinça para dar zoom</span>
+        <span><i data-lucide="chevrons-up-down"></i> &#x25be; expande resumo</span>
+      </div>
+
+      <div id="legend">
+        <div id="legend-title">Referências Bibliográficas</div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:28px;background:var(--node-center-bg)"></div>
+          <span class="legend-label">Núcleo Central</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:22px;background:var(--node-axis-bg-mob)"></div>
+          <span class="legend-label">Refugiados Ambientais</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:22px;background:var(--node-axis-bg-sassen)"></div>
+          <span class="legend-label">Sassen (2014)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:22px;background:var(--node-axis-bg-claro)"></div>
+          <span class="legend-label">Claro (2017)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:22px;background:var(--node-axis-bg-jur)"></div>
+          <span class="legend-label">Gargalo Jurídico</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-pill" style="width:22px;background:var(--node-axis-bg-vuln)"></div>
+          <span class="legend-label">Vulnerabilidades</span>
+        </div>
+        <div class="legend-item">
+          <div style="width:22px;height:2px;border-top:2px dashed rgba(180,150,100,0.7);margin:3px 0"></div>
+          <span class="legend-label">Conexão cruzada</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="side-panel">
+      <div id="panel-header">
+        <div id="panel-breadcrumb">— / —</div>
+        <span id="panel-eyebrow">Selecione um nó</span>
+        <div id="panel-title">—</div>
+        <button id="panel-close" title="Fechar painel"><i data-lucide="x"></i></button>
+      </div>
+      <div id="panel-body">
+        <div id="panel-empty">
+          <div id="panel-empty-icon"><i data-lucide="map-pin"></i></div>
+          <p>Clique em qualquer nó do mapa para visualizar a síntese acadêmica correspondente.</p>
+          <div id="panel-empty-arrow">
+            <i data-lucide="chevron-down"></i>
+            <span>Clique para ver um resumo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer id="footer">
+    <span id="footer-copyright">© 2026 Ícaro Gerhardt Welter &amp; Mateus Padilha Hoppen. Todos os direitos reservados. | Unijuí  </span>
+    <span id="footer-right">FPP: Direitos Humanos, Diversidades e Sustentabilidade</span>
+  </footer>
+
+</div>
+
+<script>
+  function applyTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.theme-btn[data-theme="${theme}"]`).classList.add('active');
+    if (!allNodes.length) return;
+    // Update links colors
+    rebuildLinks();
+    // Update node colors in-place — preserves positions, avoids flash
+    nodesG.selectAll('.node-group').each(function(d) {
+      const bg = nodeBg(d), tc = nodeTxt(d);
+      d3.select(this).select('.node-rect').attr('fill', bg);
+      d3.select(this).selectAll('.node-label-text').attr('fill', tc);
+      d3.select(this).select('.node-bar-label').attr('fill', tc);
+      d3.select(this).select('.node-summary-p').style('color', tc);
+      d3.select(this).select('.node-summary-wrap').style('background', 'rgba(0,0,0,0.18)');
+      const fo = d3.select(this).select('.node-icon-fo');
+      fo.style('color', tc);
+      fo.select('svg').attr('stroke', tc);
+    });
+  }
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme));
+  });
+
+  const svg    = d3.select('#map-svg');
+  const zoomG  = d3.select('#zoom-layer');
+  const linksG = d3.select('#links-layer');
+  const nodesG = d3.select('#nodes-layer');
+  let width  = document.getElementById('graph-area').offsetWidth;
+  let height = document.getElementById('graph-area').offsetHeight;
+
+  const zoomBehavior = d3.zoom()
+    .scaleExtent([0.2, 4])
+    .on('zoom', (event) => { zoomG.attr('transform', event.transform); });
+  svg.call(zoomBehavior);
+  svg.on('dblclick.zoom', null);
+
+  document.getElementById('btn-recenter').addEventListener('click', () => fitToScreen(700));
+
+  document.getElementById('btn-zoom-in').addEventListener('click', () => {
+    svg.transition().duration(300).call(zoomBehavior.scaleBy, 1.4);
+  });
+  document.getElementById('btn-zoom-out').addEventListener('click', () => {
+    svg.transition().duration(300).call(zoomBehavior.scaleBy, 1 / 1.4);
+  });
+
+    const graphData = {
+    nodes: [
+      {
+        id: 'center', label: 'Sustentabilidade\n& Direitos Humanos',
+        level: 0, axis: null, axisKey: 'center',
+        tooltip: 'Ponto central onde meio ambiente e direitos humanos se encontram e dependem um do outro.',
+        summary: 'A sustentabilidade é a base da vida com dignidade. Quando o ambiente é destruído por ações humanas, direitos fundamentais como saúde e moradia ficam em risco, criando um ciclo de desigualdade.',
+        panel: {
+          definition: `A sustentabilidade não é apenas cuidar da natureza; é garantir que os seres humanos possam viver bem. Um ambiente destruído fere diretamente a saúde e a dignidade das pessoas. Quando os recursos são esgotados por ações humanas (antrópicas), direitos básicos (como acesso à água e casa segura) tornam-se frágeis. Isso mostra que a injustiça com a natureza vem antes e piora a desigualdade social.`,
+          interdependence: `A ideia de que os direitos humanos não podem ser separados (indivisibilidade) torna impossível ignorar o meio ambiente. Direitos à vida e à alimentação só existem se o planeta estiver equilibrado. A ONU já reconheceu (Resolução 76/300) que viver em um ambiente limpo e saudável é um direito humano universal.`,
+          reflection: `Vivemos o que estudiosos chamam de "ecologia de ausências", onde os direitos das pessoas mais pobres são apagados. Unir sustentabilidade e direitos humanos exige mudar as relações de poder que decidem quem paga o preço da destruição do planeta.`,
+        }
+      },
+      {
+        id: 'axis_refugiados', label: 'Desafio dos\nRefugiados Ambientais',
+        level: 1, axis: 'Refugiados Ambientais', axisKey: 'mob',
+        tooltip: 'Milhões fogem de desastres climáticos, mas a lei internacional não os reconhece como refugiados.',
+        summary: 'Milhões de pessoas fogem de desastres, mas enfrentam um "vazio na lei". A Convenção de 1951 não os reconhece oficialmente, deixando-os sem proteção jurídica automática.',
+        panel: {
+          definition: `A definição clássica de refugiado (Convenção de 1951) foca apenas em quem sofre perseguição por política, religião ou raça. Ela não protege quem foge de secas, furacões ou subida do mar. Esse erro na lei deixa essas pessoas em situação de extrema pobreza e sem ajuda internacional oficial.`,
+          interdependence: `As migrações ambientais podem ser de dois tipos: Início Rápido (desastres súbitos como tsunamis e rompimento de barragens, que forçam a fuga imediata) e Início Lento (processos graduais como a falta de água e a subida do nível do mar, que tornam terras inabitáveis aos poucos).`,
+          reflection: `O problema central é que os países que mais poluem são os que mais resistem a ajudar os migrantes. Existe uma responsabilidade histórica de acolher quem perdeu tudo por causa da crise climática causada pelas grandes economias.`,
+        }
+      },
+      {
+        id: 'ref_vazio', label: 'Vazio Jurídico\nConvenção 1951',
+        level: 2, axis: 'Refugiados Ambientais', axisKey: 'mob',
+        tooltip: 'A Convenção de 1951 foi criada para perseguidos políticos. Quem foge do clima não tem proteção garantida pela lei.',
+        summary: 'A Convenção de 1951 protege perseguidos políticos, religiosos ou raciais. Quem foge de desastres climáticos não tem esse amparo, ficando em um "vazio jurídico" internacional.',
+        panel: {
+          definition: `A lei internacional define "refugiado" como alguém perseguido por raça, religião ou opinião política. Essa lei foi escrita em 1951, depois da Segunda Guerra Mundial, pensando em perseguidos políticos. Ela não cobre quem foge de enchentes, secas ou subida do nível do mar. Por isso, quem chega às fronteiras por causa do clima não tem direito automático à proteção.`,
+          interdependence: `Sem reconhecimento legal, essas pessoas são chamadas apenas de "migrantes econômicos", o que retira delas o direito à proteção humanitária. Em 2020, o caso de Teitiota (morador de Kiribati) mostrou que países podem ser obrigados a proteger pessoas que fogem do clima, mas só quando o perigo é imediato e comprovado.`,
+          reflection: `A ausência de proteção não é um acidente. É uma escolha dos países mais ricos de não criar leis que os obriguem a acolher as vítimas de uma crise climática que eles mesmos causaram.`,
+        }
+      },
+      {
+        id: 'ref_tipologia', label: 'Início Rápido\nvs. Lento',
+        level: 2, axis: 'Refugiados Ambientais', axisKey: 'mob',
+        tooltip: 'Desastres rápidos (furacões) são visíveis. Processos lentos (seca e subida do mar) deslocam mais pessoas, mas recebem menos atenção.',
+        summary: 'Há dois tipos de deslocamento: os rápidos (furacões, inundações) e os lentos (seca, subida do mar). Os lentos são mais perigosos a longo prazo, mas recebem menos atenção das leis internacionais.',
+        panel: {
+          definition: `Os deslocamentos por causa do ambiente se dividem em dois tipos. O primeiro é de início rápido: um furacão, uma enchente ou uma barragem que rompe. Tudo acontece de uma vez e as pessoas precisam sair correndo. O segundo é de início lento: a seca que vai secando o rio aos poucos, ou o mar que vai subindo todo ano. As pessoas precisam sair, mas sem um evento único e óbvio como ponto de partida.`,
+          interdependence: `Os deslocamentos lentos são o maior desafio da proteção legal. Como não há uma "catástrofe" claramente datada, fica difícil provar que a pessoa precisava sair. Isso afeta países inteiros como Tuvalu e Kiribati, que estão sendo engolidos pelo oceano aos poucos.`,
+          reflection: `O IDMC registrou mais de 26 milhões de novos deslocamentos por desastres em 2023 (mais do que por guerras). A maioria foi rápida e visível. Os lentos, que ameaçarão centenas de milhões até 2050, ainda não aparecem nos registros. O que não é contado, não é protegido.`,
+        }
+      },
+      {
+        id: 'ref_nonrefoulement', label: 'Non-Refoulement\nClimático',
+        level: 2, axis: 'Refugiados Ambientais', axisKey: 'mob',
+        tooltip: 'O princípio que proíbe enviar alguém de volta para um lugar perigoso (incluindo perigo causado pelo clima).',
+        summary: 'Non-Refoulement significa "não devolver". É o princípio que proíbe um país de mandar alguém de volta para um lugar perigoso. O caso Teitiota (2020) mostrou que o risco climático pode acionar essa proteção.',
+        panel: {
+          definition: `O Non-Refoulement é uma regra do direito internacional que proíbe um país de devolver alguém para um lugar onde sua vida corra perigo. Historicamente era usado para perseguidos políticos. Em 2020, o caso de Ioane Teitiota (morador de uma ilha que estava sendo engolida pelo mar) mostrou que o risco climático pode, futuramente, acionar essa proteção também.`,
+          interdependence: `Essa é a ferramenta jurídica mais promissora para proteger refugiados climáticos no curto prazo. Ela coloca sobre o país que quer deportar alguém a responsabilidade de provar que o local de origem é seguro. Para ilhas que estão desaparecendo sob o oceano, isso se torna cada vez mais difícil de provar.`,
+          reflection: `A limitação é que, no caso Teitiota, o risco ainda não era considerado "imediato" em 2015. Críticos dizem que esse critério não funciona para riscos graduais como a subida do mar. Afinal, o nível do mar não ameaça alguém num único dia, mas torna um território inabitável ao longo de décadas.`,
+        }
+      },
+      {
+        id: 'axis_sassen', label: 'Teoria das Expulsões\n(Saskia Sassen)',
+        level: 1, axis: 'Sassen (Expulsões)', axisKey: 'sassen',
+        tooltip: 'Como a economia atual força comunidades a abandonar seus territórios ao esgotar a natureza.',
+        summary: 'A economia atual esgota a natureza de forma agressiva, gerando "expulsões" em vez de migrações voluntárias. As pessoas são forçadas a sair porque a terra morre.',
+        panel: {
+          definition: `O sistema econômico atual (capitalismo contemporâneo) usa tecnologias que esgotam a natureza sem dar tempo para ela se recuperar. Isso causa danos que não podem ser consertados, forçando as pessoas a abandonarem suas casas. Não é uma escolha de mudar, é uma "expulsão" da própria terra.`,
+          interdependence: `Para entender o refugiado ambiental, é preciso olhar para as "tendências escondidas". Grupos mais pobres são os primeiros a serem expulsos e acabam ficando invisíveis para a política mundial. Dar voz a esses grupos é o primeiro passo para criar uma economia que respeite a vida.`,
+          reflection: `Sassen mostra que as "expulsões" modernas são invisíveis para a economia: o PIB pode crescer enquanto populações são removidas de seus territórios e o meio ambiente é destruído para sempre. Os indicadores econômicos tradicionais não detectam esse problema. Por isso, Sassen propõe olhar para o que está ausente, para quem foi apagado das estatísticas.`,
+        }
+      },
+      {
+        id: 'sassen_extrativismo', label: 'Extração e\nEsgotamento da Biosfera',
+        level: 2, axis: 'Sassen (Expulsões)', axisKey: 'sassen',
+        tooltip: 'A extração sem limites de recursos naturais destrói o que sustenta a vida e viola direitos humanos básicos.',
+        summary: 'O modelo extrativista trata a natureza como um objeto a ser consumido pelo lucro rápido. Quando os rios são contaminados e as florestas derrubadas, direitos básicos como água e saúde desaparecem junto.',
+        panel: {
+          definition: `A extração sem limites de recursos trata a natureza como um objeto a ser liquidado pelo lucro rápido. Isso viola direitos ao destruir o que sustenta a vida: rios contaminados tiram o direito à água; desmatamento tira o direito ao clima equilibrado.`,
+          interdependence: `A destruição da natureza viola direitos humanos de forma direta. Rios contaminados pela mineração retiram o direito à água de comunidades indígenas. O desmatamento do Cerrado compromete o ciclo de chuvas que abastece milhões de pessoas. Cada recurso natural destruído é um direito humano a menos.`,
+          reflection: `As comunidades que mais dependem da natureza para sobreviver são as primeiras a perder quando ela é destruída. São também as que têm mais conhecimento para protegê-la. Por isso, respeitar os direitos territoriais dessas comunidades é ao mesmo tempo uma questão de direitos humanos e de proteção ambiental.`,
+        }
+      },
+      {
+        id: 'sassen_financeirizacao', label: 'Dinheiro sobre\na Natureza',
+        level: 2, axis: 'Sassen (Expulsões)', axisKey: 'sassen',
+        tooltip: 'Quando florestas e rios viram investimentos financeiros, as comunidades que vivem neles passam a ser vistas como obstáculos.',
+        summary: 'Quando a natureza vira "ativo financeiro", as comunidades que a protegem se tornam inconvenientes. Mercados de carbono mal planejados podem usar a bandeira do meio ambiente para expulsar indígenas de suas terras.',
+        panel: {
+          definition: `Quando florestas e águas viram apenas "ativos de investimento", as comunidades que vivem nelas passam a ser vistas como problemas. Mercados de carbono, se mal planejados, podem acelerar a expulsão de indígenas de suas terras ancestrais.`,
+          interdependence: `Quando uma floresta vira crédito de carbono negociado em bolsa, as comunidades indígenas que vivem nela há séculos passam a ser vistas como "problema" para os negócios. Essa é uma nova forma de expulsão: agora justificada com discurso ambiental, mas com o mesmo efeito de sempre (tirar as pessoas de suas terras).`,
+          reflection: `O programa REDD+ (que paga por florestas em pé) é um exemplo: quando mal planejado, pode expulsar comunidades indígenas de seus territórios enquanto gera créditos de carbono para empresas poluidoras em países ricos. Preservação ambiental que viola direitos humanos não é preservação, é expulsão com outro nome.`,
+        }
+      },
+      {
+        id: 'sassen_expulsoes_territoriais', label: 'Expulsões por\nGrandes Projetos',
+        level: 2, axis: 'Sassen (Expulsões)', axisKey: 'sassen',
+        tooltip: 'Grandes obras de desenvolvimento removem comunidades à força, com cobertura legal do próprio Estado.',
+        summary: 'Barragens, mineração e agronegócio expulsam comunidades inteiras usando o aparato legal do Estado. No Brasil, milhões já foram atingidos por barragens e a maioria não recebeu indenização justa.',
+        panel: {
+          definition: `Grandes obras (barragens, mineração e agronegócio) muitas vezes removem pessoas à força com ajuda da lei. No Brasil, milhões já foram atingidos por barragens sem receber indenização justa, perdendo sua moradia e sua cultura.`,
+          interdependence: `No Brasil, o Movimento dos Atingidos por Barragens (MAB) registra quase 5 milhões de pessoas afetadas ao longo de décadas. Mais de 70% não recebeu indenização adequada. Cada remoção é uma violação do direito à moradia, à cultura e, no caso dos povos indígenas, do direito ao próprio território.`,
+          reflection: `Sassen mostra que as expulsões acontecem com a ajuda ativa do Estado: são as leis de "utilidade pública" e os licenciamentos rápidos que dão cobertura legal às remoções. O mesmo Estado que deveria proteger os direitos humanos acaba sendo o agente das expulsões.`,
+        }
+      },
+      {
+        id: 'axis_claro', label: 'Classificação do Refúgio\n(Claro, 2017)',
+        level: 1, axis: 'Claro 2017', axisKey: 'claro',
+        tooltip: 'Carolina Claro organizou os refugiados ambientais em três tipos para facilitar a criação de leis de proteção.',
+        summary: 'Carolina Claro divide os refugiados em três tipos: em Sentido Amplo (causas naturais ou humanas), Do Clima (mudanças causadas pelo homem) e Da Conservação (expulsos por projetos de preservação do governo).',
+        panel: {
+          definition: `A professora Carolina Claro criou uma forma de organizar esses migrantes para facilitar a criação de leis. Ela separa quem foge por desastres naturais de quem foge por problemas causados diretamente pelo aquecimento global. Também destaca um grupo esquecido: pessoas expulsas de suas terras porque o governo decidiu criar um parque de preservação no local.`,
+          interdependence: `A classificação de Claro mostra que nem toda migração ambiental tem a mesma origem. Algumas são causadas pelo aquecimento global (Refugiados do Clima). Outras são causadas por qualquer desastre ambiental, natural ou humano (Lato Sensu). E uma terceira é causada pelo próprio governo ao criar parques sem consultar quem já morava lá (Deslocados por Conservação). Cada tipo precisa de um tipo diferente de proteção.`,
+          reflection: `A classificação de Claro mostra que a proteção dessas pessoas não é apenas "ajuda humanitária" (caridade), mas um dever de reparação. Se os países ricos poluem o clima e causam essas migrações, eles têm a obrigação de acolher essas vítimas.`,
+        }
+      },
+      {
+        id: 'claro_lato', label: 'Refugiado em\nSentido Amplo',
+        level: 2, axis: 'Claro 2017', axisKey: 'claro',
+        tooltip: 'Categoria que inclui todos os deslocados por causas ambientais, sejam naturais ou causadas por ações humanas.',
+        summary: 'A categoria mais ampla de Claro. Inclui todas as pessoas forçadas a sair de casa por qualquer causa ambiental: terremotos, barragens, enchentes ou desertificação.',
+        panel: {
+          definition: `Esta é a categoria mais geral. Inclui todas as pessoas forçadas a sair de casa por qualquer motivo ambiental (seja um desastre natural como um terremoto, ou um acidente causado pelo homem como o rompimento de uma barragem). No Brasil, as pessoas atingidas pelas enchentes no RS se encaixam aqui.`,
+          interdependence: `Essa categoria é importante porque reconhece que o deslocamento ambiental não é só causado pelo clima. Um acidente industrial ou o rompimento de uma barragem também forçam as pessoas a sair de casa, e elas merecem a mesma proteção. No Brasil, quem foi atingido pelas enchentes do RS (2024) se encaixa nessa categoria.`,
+          reflection: `Para o Brasil, essa é a categoria mais urgente. As enchentes de 2024 no Rio Grande do Sul deslocaram centenas de milhares de pessoas. Mesmo permanecendo no país, elas perderam moradia, trabalho e vida. Precisam de proteção de direitos humanos, mesmo sem serem "refugiados" no sentido jurídico estrito.`,
+        }
+      },
+      {
+        id: 'claro_clima', label: 'Refugiado\ndo Clima',
+        level: 2, axis: 'Claro 2017', axisKey: 'claro',
+        tooltip: 'Quem foge especificamente dos efeitos das mudanças climáticas causadas pelo homem, como subida do mar e secas extremas.',
+        summary: 'O grupo que mais cresce no mundo. Fogem especificamente das mudanças climáticas causadas pelo homem, como subida do nível do mar e secas extremas. É o grupo com menos proteção nas leis internacionais.',
+        panel: {
+          definition: `Este grupo foge especificamente dos efeitos das mudanças climáticas causadas pelo homem (como a subida do nível do mar ou secas extremas). É a categoria que mais cresce no mundo, mas é a que menos tem proteção nas leis internacionais, pois a lei atual foi feita antes da era da crise climática.`,
+          interdependence: `Até 2050, comunidades inteiras em Bangladesh, ilhas do Pacífico e zonas costeiras da América Latina serão obrigadas a se deslocar pelo clima. São populações que não criaram a crise climática, mas pagam o preço mais alto por ela. A Convenção de 1951 foi feita antes da era climática e não as protege.`,
+          reflection: `A classificação de Claro abre um argumento importante: se essas pessoas foram deslocadas pela ação dos países que mais poluíram o planeta, protegê-las não é caridade. É uma obrigação de reparação. Quem causou o dano tem o dever de assumir as consequências.`,
+        }
+      },
+      {
+        id: 'claro_conservacao', label: 'Deslocado por\nConservação',
+        level: 2, axis: 'Claro 2017', axisKey: 'claro',
+        tooltip: 'Comunidades expulsas de suas terras pelo governo para criar parques de preservação, sem que fossem consultadas.',
+        summary: 'O paradoxo da conservação: o governo expulsa da terra justamente as comunidades que historicamente a protegeram, em nome da preservação ambiental.',
+        panel: {
+          definition: `É o tipo mais contraditório: são comunidades tradicionais expulsas pelo governo para a criação de áreas protegidas (como Parques Nacionais) sem que os moradores sejam consultados. O governo tira da terra justamente as populações que historicamente cuidaram desses ecossistemas, violando seus direitos em nome da preservação.`,
+          interdependence: `Pesquisas mostram que as áreas protegidas geridas por comunidades indígenas e locais têm resultados de conservação melhores do que os parques de exclusão (onde as pessoas são proibidas de entrar). Expulsar quem sempre cuidou da terra não protege o meio ambiente. Piora.`,
+          reflection: `No Brasil, comunidades quilombolas e indígenas foram expulsas de territórios tradicionais para criar parques nacionais, sem consulta prévia. O pesquisador Carlos Porto-Gonçalves mostra que essas comunidades eram os verdadeiros guardiões da Mata Atlântica. Sua saída não protegeu o bioma; removeu seus melhores gestores.`,
+        }
+      },
+      {
+        id: 'axis_juridico', label: 'Gargalo Jurídico\nInternacional',
+        level: 1, axis: 'Gargalo Jurídico', axisKey: 'jur',
+        tooltip: 'A lei internacional não reconhece o refugiado ambiental, deixando-o sem proteção e sujeito à deportação.',
+        summary: 'A lei falha ao não reconhecer o refugiado ambiental. Sem esse status oficial, essas pessoas perdem o direito de proteção e podem ser devolvidas a locais onde correm risco de morte.',
+        panel: {
+          definition: `Existe um conflito entre a realidade do clima e a lei escrita. A lei atual (Convenção de 1951) exige que o refugiado prove que está sendo "perseguido" por alguém (governo ou grupo armado). Como a crise climática não é uma pessoa que persegue, o Direito Internacional não sabe como lidar com essas vítimas, deixando-as sem proteção.`,
+          interdependence: `O princípio de "não devolução" (Non-Refoulement) garante que o refugiado não seja enviado de volta para onde corre perigo. Mas ele só vale para quem é reconhecido como refugiado. Como o refugiado ambiental não tem esse reconhecimento, ele fica de fora. Acaba sendo classificado apenas como "migrante econômico", o que apaga sua necessidade real de proteção.`,
+          reflection: `A falta de proteção na lei é uma escolha política. Casos como o de Teitiota (um morador de uma ilha que afundava e pediu asilo na Nova Zelândia) mostram que a justiça internacional está começando a admitir que expulsar alguém de volta para um país destruído pelo clima é uma violação do direito à vida.`,
+        }
+      },
+      {
+        id: 'jur_temor', label: 'Fundado Temor\nde Perseguição',
+        level: 2, axis: 'Gargalo Jurídico', axisKey: 'jur',
+        tooltip: 'A lei exige uma pessoa ou grupo que "persiga" a vítima. Como o clima não persegue ninguém, a lei não se aplica.',
+        summary: 'Para a Convenção de 1951, um refugiado precisa provar que tem medo de um perseguidor identificável. Como o clima não é uma pessoa, as vítimas do aquecimento global ficam de fora da proteção.',
+        panel: {
+          definition: `Para ganhar refúgio, a lei exige um "agente perseguidor" identificável. As mudanças climáticas são causadas por muitos países ao longo de décadas; não há um único "culpado" direto para processar. Por causa dessa regra antiga, as vítimas do clima são chamadas apenas de "migrantes econômicos", o que tira delas o direito ao asilo.`,
+          interdependence: `As mudanças climáticas são causadas por décadas de emissões de muitos países. Não existe um "culpado" identificável que tenha agido contra uma vítima específica. Por isso, a lei de 1951 não se aplica. As vítimas do clima chegam às fronteiras e são tratadas como quem se mudou por questões econômicas, não por perigo de vida.`,
+          reflection: `Juristas buscam formas criativas de resolver esse problema. Uma ideia é incluir os moradores de ilhas que estão desaparecendo como um "grupo social" específico, que enfrenta perseguição indireta pelos países que mais poluíram. Outra é reformar a lei para incluir causas climáticas. Enquanto isso não acontece, as vítimas ficam sem proteção.`,
+        }
+      },
+      {
+        id: 'jur_nonrefoulement', label: 'Non-Refoulement\ne Soberania',
+        level: 2, axis: 'Gargalo Jurídico', axisKey: 'jur',
+        tooltip: 'Conflito entre o direito dos países de controlar suas fronteiras e a proibição de devolver pessoas para lugares perigosos.',
+        summary: 'O Non-Refoulement proíbe devolver alguém para um lugar perigoso. A Soberania dá aos países o direito de controlar quem entra. Quando os maiores poluidores fecham as portas para as vítimas do clima, a injustiça fica evidente.',
+        panel: {
+          definition: `O princípio da "Não-Devolução" (Non-Refoulement) proíbe que um país envie alguém de volta para um lugar onde sua vida corra perigo. Mas como os países querem controlar suas fronteiras (Soberania), eles usam a falta de leis sobre o clima para recusar migrantes. Isso gera uma grande injustiça: os países que mais poluem são os mesmos que usam a lei para fechar as portas para as vítimas da poluição.`,
+          interdependence: `O problema é a assimetria: os países que serão engolidos pelo oceano (como Tuvalu e Kiribati) contribuíram com menos de 1% das emissões históricas de carbono. Os países que causaram a crise climática são os mesmos que mais resistem a receber as vítimas. Usam a soberania como escudo para evitar a responsabilidade.`,
+          reflection: `O caso do cidadão de Kiribati, Ioane Teitiota, que pediu asilo na Nova Zelândia em 2015, é um marco. Em 2020, a ONU reconheceu que o risco climático pode um dia acionar o Non-Refoulement, mas considerou que o perigo ainda não era imediato na época. É um pequeno passo, mas o primeiro a conectar a crise climática ao direito de não ser devolvido para a morte.`,
+        }
+      },
+      {
+        id: 'axis_vuln', label: 'Vulnerabilidades\n& Injustiça Ambiental',
+        level: 1, axis: 'Vulnerabilidades', axisKey: 'vuln',
+        tooltip: 'A crise ambiental atinge grupos vulneráveis de forma desproporcional (injustiça estrutural).',
+        summary: 'A crise ambiental não atinge a todos da mesma forma. Grupos em situação de pobreza, comunidades negras e indígenas sofrem mais com os desastres por causa de falhas históricas no planejamento das cidades e na proteção de direitos.',
+        panel: {
+          definition: `A Injustiça Ambiental acontece quando os riscos e danos da natureza (ou de grandes obras) caem pesadamente sobre os ombros das populações mais pobres. Enquanto alguns lucram com o modelo de desenvolvimento, outros (os vulneráveis) ficam com a poluição, a falta de saneamento e o perigo de desastres. Esse conceito mostra que não há sustentabilidade sem justiça social.`,
+          interdependence: `A injustiça ambiental é a mais clara demonstração de que sustentabilidade e direitos humanos são inseparáveis. O Mapa de Conflitos Ambientais da Fiocruz documenta mais de 600 casos no Brasil em que populações negras, indígenas e periféricas são as vítimas preferenciais dos impactos de grandes projetos de infraestrutura, mineração e agronegócio.`,
+          reflection: `Como ensina o professor Henri Acselrad, os conflitos ambientais são conflitos de direitos. Para resolver isso, não basta apenas "plantar árvores"; é preciso garantir que as populações afetadas sejam ouvidas e tenham seus direitos à moradia e à segurança respeitados antes que o desastre aconteça.`,
+        }
+      },
+      {
+        id: 'vuln_racismo', label: 'Racismo\nAmbiental',
+        level: 2, axis: 'Vulnerabilidades', axisKey: 'vuln',
+        tooltip: 'A prática de colocar lixões, refinarias e áreas de risco perto de comunidades negras, indígenas e periféricas.',
+        summary: 'Racismo Ambiental (Chavis Jr.): os riscos ambientais como lixões, refinarias e áreas de risco são colocados sistematicamente perto de comunidades negras, indígenas e periféricas. No Brasil, isso é visto nas periferias e nos territórios indígenas.',
+        panel: {
+          definition: `O Racismo Ambiental (termo criado por Benjamin Chavis Jr.) explica que as políticas do governo e das empresas acabam alocando riscos ambientais (como lixões, refinarias ou áreas de risco) em locais onde vivem comunidades racializadas (negros, indígenas e quilombolas). No Brasil, isso é visto na falta de infraestrutura nas periferias e na invasão de terras indígenas para mineração.`,
+          interdependence: `No Brasil, o racismo ambiental não é uma série de decisões isoladas. É um padrão: comunidades negras e indígenas recebem menos infraestrutura, ficam em áreas sem saneamento e são as primeiras afetadas por grandes obras. Isso reflete um racismo que não precisa de intenção para funcionar. Está na estrutura das cidades e das políticas públicas.`,
+          reflection: `O caso das comunidades quilombolas do Vale do Ribeira (SP) mostra bem: durante décadas, foram expulsas de suas terras pela criação de parques ambientais. O Estado usou a preservação ambiental como justificativa para tirar populações negras tradicionais de seus territórios. É racismo ambiental com discurso verde.`,
+        }
+      },
+      {
+        id: 'vuln_rs', label: 'Enchentes no RS\n(2024)',
+        level: 2, axis: 'Vulnerabilidades', axisKey: 'vuln',
+        tooltip: 'O maior desastre climático do Brasil, que revelou décadas de injustiça ambiental e planejamento urbano falho.',
+        summary: 'RS 2024: 470 municípios (84% do estado), 2,4 milhões de pessoas atingidas, 800 mortos e desaparecidos. O desastre foi de 6 a 9 vezes mais provável por causa do aquecimento global. Era previsível e evitável.',
+        panel: {
+          definition: `As enchentes no Rio Grande do Sul em 2024 são a maior prova de Injustiça Ambiental no Brasil. O desastre atingiu 84% do estado, mas quem perdeu tudo foram as pessoas que moravam em áreas de várzea e vilas que o governo ignorou por décadas. Foi um desastre previsível (anunciado por técnicos), mas a falta de manutenção nas defesas e o planejamento urbano focado no lucro impediram a proteção das pessoas.`,
+          interdependence: `As enchentes do RS mostram a ligação direta entre sustentabilidade e direitos humanos. O direito à moradia foi violado quando casas em áreas de risco (toleradas pelo governo por décadas) foram destruídas. O direito à água foi violado com o colapso do saneamento. O direito à saúde foi ameaçado pelo surto de leptospirose. Cada uma dessas violações era previsível e evitável.`,
+          reflection: `O desastre não foi apenas natural. Foi construído por décadas de decisões políticas. Porto Alegre permitiu que pessoas morassem em áreas de várzea. As comportas do sistema de proteção contra enchentes não foram mantidas, apesar dos alertas técnicos. Um desastre anunciado que virou tragédia real porque ninguém agiu para impedi-lo.`,
+        }
+      },
+    ],
+
+    links: [
+      { source: 'center', target: 'axis_refugiados' },
+      { source: 'center', target: 'axis_sassen' },
+      { source: 'center', target: 'axis_claro' },
+      { source: 'center', target: 'axis_juridico' },
+      { source: 'center', target: 'axis_vuln' },
+
+      { source: 'axis_refugiados', target: 'ref_vazio' },
+      { source: 'axis_refugiados', target: 'ref_tipologia' },
+      { source: 'axis_refugiados', target: 'ref_nonrefoulement' },
+
+      { source: 'axis_sassen', target: 'sassen_extrativismo' },
+      { source: 'axis_sassen', target: 'sassen_financeirizacao' },
+      { source: 'axis_sassen', target: 'sassen_expulsoes_territoriais' },
+
+      { source: 'axis_claro', target: 'claro_lato' },
+      { source: 'axis_claro', target: 'claro_clima' },
+      { source: 'axis_claro', target: 'claro_conservacao' },
+
+      { source: 'axis_juridico', target: 'jur_temor' },
+      { source: 'axis_juridico', target: 'jur_nonrefoulement' },
+
+      { source: 'axis_vuln', target: 'vuln_racismo' },
+      { source: 'axis_vuln', target: 'vuln_rs' },
+
+      { source: 'ref_vazio',          target: 'jur_temor',          cross: true },
+      { source: 'ref_nonrefoulement', target: 'jur_nonrefoulement', cross: true },
+      { source: 'sassen_extrativismo',target: 'vuln_rs',            cross: true },
+      { source: 'claro_clima',        target: 'ref_vazio',          cross: true },
+      { source: 'sassen_expulsoes_territoriais', target: 'vuln_racismo', cross: true },
+      { source: 'claro_conservacao',  target: 'vuln_racismo',       cross: true },
+    ]
+  };
+  let simulation, allNodes = [], allLinks = [];
+  let entranceAnimated = false;
+
+  const ICON_MAP = {
+    'center':                        'globe',
+    'axis_refugiados':               'ship',
+    'axis_sassen':                   'trending-down',
+    'axis_claro':                    'book-open',
+    'axis_juridico':                 'scale',
+    'axis_vuln':                     'alert-triangle',
+    'ref_vazio':                     'file-question',
+    'ref_tipologia':                 'clock',
+    'ref_nonrefoulement':            'shield',
+    'sassen_extrativismo':           'pickaxe',
+    'sassen_financeirizacao':        'bar-chart-2',
+    'sassen_expulsoes_territoriais': 'map-pin-off',
+    'claro_lato':                    'users',
+    'claro_clima':                   'thermometer',
+    'claro_conservacao':             'tree-pine',
+    'jur_temor':                     'eye',
+    'jur_nonrefoulement':            'door-closed',
+    'vuln_racismo':                  'eye-off',
+    'vuln_rs':                       'droplets',
+  };
+
+  const NODE_W    = [170, 152, 134];
+  const NODE_H    = [68,  58,  50];
+  const NODE_RX   = [34,  29,  25];
+  const NODE_FS   = [13,  11,  10];
+  const NODE_FW   = ['700', '600', '500'];
+  const NODE_IS   = [16,   14,  12];
+  const BAR_H_ARR = [32,   30,  28];
+
+  function getCS(v) { return getComputedStyle(document.body).getPropertyValue(v).trim(); }
+  function nodeBg(d) {
+    if (d.level === 0) return getCS('--node-center-bg');
+    const axisMap = {
+      'mob':    '--node-axis-bg-mob',
+      'sassen': '--node-axis-bg-sassen',
+      'claro':  '--node-axis-bg-claro',
+      'jur':    '--node-axis-bg-jur',
+      'vuln':   '--node-axis-bg-vuln',
+    };
+    if (d.level === 1) return getCS(axisMap[d.axisKey] || '--node-axis-bg');
+    const subVarMap = {
+      'mob': '--node-sub-mob', 'sassen': '--node-sub-sassen', 'claro': '--node-sub-claro',
+      'jur': '--node-sub-jur', 'vuln':   '--node-sub-vuln',
+    };
+    return getCS(subVarMap[d.axisKey] || '--node-sub-bg');
+  }
+  function nodeTxt(d) { return getCS(d.level===0?'--node-center-txt':d.level===1?'--node-axis-txt':'--node-sub-txt'); }
+  function linkColor(d) { return getCS((typeof d.source==='object'?d.source.level:0)===0?'--link-main':'--link-sub'); }
+  function linkW(d) { const l=(typeof d.source==='object'?d.source.level:0); return l===0?2.5:l===1?1.5:1; }
+
+  function buildGraph(data) {
+    allNodes = data.nodes;
+    allLinks = data.links.map(l => ({ ...l }));
+
+    
+    const R1 = 330, R2 = 205;
+    const axisAng    = { axis_refugiados: -90, axis_claro: -18, axis_vuln: 54, axis_sassen: 126, axis_juridico: 198 };
+    const axisKeyAng = { mob: -90, claro: -18, vuln: 54, sassen: 126, jur: 198 };
+    const subSpr   = {
+      ref_vazio: -40, ref_tipologia: 0, ref_nonrefoulement: 40,
+      sassen_extrativismo: -40, sassen_financeirizacao: 0, sassen_expulsoes_territoriais: 40,
+      claro_lato: -40, claro_clima: 0, claro_conservacao: 40,
+      jur_temor: -28, jur_nonrefoulement: 28,
+      vuln_racismo: -28, vuln_rs: 28,
+    };
+    allNodes.forEach(n => {
+      if (n.id === 'center') {
+        n.x = 0; n.y = 0;
+      } else if (axisAng[n.id] !== undefined) {
+        const a = axisAng[n.id] * Math.PI / 180;
+        n.x = Math.cos(a) * R1;  n.y = Math.sin(a) * R1;
+      } else if (subSpr[n.id] !== undefined) {
+        const base = axisKeyAng[n.axisKey] || 0;
+        const a    = (base + subSpr[n.id]) * Math.PI / 180;
+        n.x = Math.cos(base * Math.PI / 180) * R1 + Math.cos(a) * R2;
+        n.y = Math.sin(base * Math.PI / 180) * R1 + Math.sin(a) * R2;
+      }
+    });
+
+    simulation = d3.forceSimulation(allNodes)
+      .alphaDecay(0.04)
+      .velocityDecay(0.48)
+      .force('link', d3.forceLink(allLinks).id(d => d.id)
+        .distance(d => {
+          const src = typeof d.source==='object' ? d.source : allNodes.find(n=>n.id===d.source);
+          if (d.cross) return 580;
+          return [300, 240, 160][src ? src.level : 2] || 160;
+        }).strength(d => d.cross ? 0.02 : 0.45))
+      .force('charge', d3.forceManyBody().strength(d => [-2800,-1100,-480][d.level] || -400))
+      .force('center', d3.forceCenter(0, 0))
+      .force('collision', d3.forceCollide().radius(d => {
+        const lv = Math.min(d.level, 2);
+        return Math.max(NODE_W[lv], NODE_H[lv] + BAR_H_ARR[lv]) / 2 + 38;
+      }))
+      .on('tick', ticked)
+      .on('end', () => { if (!entranceAnimated) { entranceAnimated = true; runEntranceAnimation(); } });
+    rebuildLinks();
+    rebuildNodes();
+  }
+
+  function rebuildLinks() {
+    linksG.selectAll('path.link').remove();
+    linksG.selectAll('path.link')
+      .data(allLinks).join('path')
+      .attr('class', d => d.cross ? 'link cross-link' : 'link')
+      .attr('stroke', d => d.cross ? getCS('--link-cross') : linkColor(d))
+      .attr('stroke-width', d => d.cross ? 1.2 : linkW(d))
+      .attr('stroke-opacity', d => d.cross ? 0.55 : 0.5)
+      .attr('stroke-dasharray', d => d.cross ? '5,4' : null);
+  }
+
+  function linkPath(d) {
+    const sx=d.source.x||0, sy=d.source.y||0, tx=d.target.x||0, ty=d.target.y||0;
+    const cx=(sx+tx)/2-(ty-sy)*0.14, cy=(sy+ty)/2+(tx-sx)*0.14;
+    return `M${sx},${sy} Q${cx},${cy} ${tx},${ty}`;
+  }
+
+  function rebuildNodes() {
+    nodesG.selectAll('.node-group').remove();
+    const groups = nodesG.selectAll('.node-group')
+      .data(allNodes).join('g')
+      .attr('class', 'node-group')
+      .call(d3.drag()
+        .on('start', dragStarted)
+        .on('drag',  dragged)
+        .on('end',   dragEnded))
+      .on('click', (event, d) => { event.stopPropagation(); highlightNode(d); openPanel(d); });
+
+    groups.each(function(d) {
+      const g   = d3.select(this);
+      const lv  = Math.min(d.level, 2);
+      const w=NODE_W[lv], h=NODE_H[lv], rx=NODE_RX[lv];
+      const fs=NODE_FS[lv], fw=NODE_FW[lv], is=NODE_IS[lv];
+      const barH   = BAR_H_ARR[lv];
+      const totalH = h + barH;
+      const bg=nodeBg(d), tc=nodeTxt(d);
+
+      // Per-node clipPath so the bar overlay respects the pill's rounded corners
+      const clipId = `pc-${d.id}`;
+      g.append('defs')
+        .append('clipPath').attr('id', clipId)
+        .append('rect')
+          .attr('class', 'node-clip-rect')
+          .attr('x', -w/2).attr('y', -h/2)
+          .attr('width', w).attr('height', totalH)
+          .attr('rx', rx).attr('ry', rx);
+
+      // Full pill background (content area + bar area) with drop shadow
+      g.append('rect')
+        .attr('class','node-rect')
+        .attr('x',-w/2).attr('y',-h/2)
+        .attr('width',w).attr('height', totalH)
+        .attr('rx',rx).attr('ry',rx)
+        .attr('fill',bg)
+        .attr('filter','url(#node-shadow)');
+
+      // Bottom bar — darker overlay, clipped to pill shape
+      if (d.summary) {
+        g.append('rect')
+          .attr('class', 'node-bar-rect')
+          .attr('x', -w/2).attr('y', h/2)
+          .attr('width', w).attr('height', barH)
+          .attr('fill', 'rgba(0,0,0,0.22)')
+          .attr('clip-path', `url(#${clipId})`);
+      }
+
+      const lines = d.label.split('\n');
+      const lineH = fs + 3;
+      const textBlockH = is + 4 + lines.length * lineH;
+      let cy = -textBlockH / 2;
+
+      const fo = g.append('foreignObject')
+        .attr('class','node-icon-fo')
+        .attr('x', -is/2).attr('y', cy)
+        .attr('width', is).attr('height', is)
+        .style('color', tc);
+      fo.append('xhtml:i')
+        .attr('data-lucide', ICON_MAP[d.id] || 'circle-dot')
+        .style('display','block')
+        .style('width', is+'px').style('height', is+'px')
+        .style('color', tc).style('pointer-events','none');
+      cy += is + 4;
+
+      const CHAR_W = [7.2, 6.2, 5.6];
+      lines.forEach((line, i) => {
+        const maxLineW = w - 20;
+        const estW = line.length * CHAR_W[lv];
+        const tEl = g.append('text')
+          .attr('class','node-label-text')
+          .attr('x',0).attr('y', cy + i*lineH + lineH/2)
+          .attr('text-anchor','middle')
+          .attr('dominant-baseline','central')
+          .attr('fill',tc)
+          .attr('font-size', fs+'px')
+          .attr('font-weight', fw)
+          .attr('font-family',"'Inter', sans-serif")
+          .text(line);
+        if (estW > maxLineW) {
+          tEl.attr('textLength', maxLineW).attr('lengthAdjust', 'spacingAndGlyphs');
+        }
+      });
+
+      // Bar label: always visible, click to expand/collapse summary
+      if (d.summary) {
+        const barLabelFS = [11, 10, 10][lv];
+        g.append('text')
+          .attr('class', 'node-bar-label')
+          .attr('x', 0).attr('y', h/2 + barH/2)
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .attr('fill', tc)
+          .attr('font-size', barLabelFS + 'px')
+          .attr('font-weight', '600')
+          .attr('font-family', "'Inter', sans-serif")
+          .attr('letter-spacing', '0.4px')
+          .attr('opacity', 0.8)
+          .attr('cursor', 'pointer')
+          .attr('pointer-events', 'all')
+          .text('VER RESUMO \u25bc')
+          .on('click', function(event) {
+            event.stopPropagation();
+            toggleNodeSummary(d3.select(this.closest('.node-group')));
+          });
+
+        // foreignObject com height generoso; altura real medida por scrollHeight no expand
+        g.append('foreignObject')
+          .attr('class', 'node-summary-fo')
+          .attr('x', -w/2).attr('y', h/2 + barH)
+          .attr('width', w).attr('height', 300)
+          .style('opacity', 0).style('pointer-events', 'none')
+          .append('xhtml:div')
+            .attr('class', 'node-summary-wrap')
+            .style('width', (w - 0) + 'px')
+            .style('box-sizing', 'border-box')
+            .style('padding', '8px 12px 14px')
+            .style('background', 'rgba(0,0,0,0.18)')
+            .style('border-radius', '0 0 ' + (NODE_RX[lv]) + 'px ' + (NODE_RX[lv]) + 'px')
+            .append('xhtml:p')
+              .attr('class', 'node-summary-p')
+              .style('font-size', '10.5px').style('line-height', '1.6')
+              .style('color', tc).style('font-family', "'Inter', sans-serif")
+              .style('margin', '0')
+              .style('word-wrap', 'break-word')
+              .style('white-space', 'normal')
+              .text(d.summary);
+      }
+    });
+
+    if (window.lucide) lucide.createIcons({ rootElement: nodesG.node() });
+
+    groups.nodes().forEach(el => {
+      const d = d3.select(el).datum();
+      if (d.tooltip) {
+        tippy(el, { content: d.tooltip, theme: 'academic', placement: 'top', delay:[300,0], touch:false, arrow:true });
+      }
+    });
+  }
+
+  function toggleNodeSummary(gSel) {
+    const d    = gSel.datum();
+    const lv   = Math.min(d.level, 2);
+    const h    = NODE_H[lv];
+    const barH = BAR_H_ARR[lv];
+    d.expanded = !d.expanded;
+
+    const nodeRect = gSel.select('.node-rect');
+    const clipRect = gSel.select('.node-clip-rect');
+    const sfo      = gSel.select('.node-summary-fo');
+    const barLabel = gSel.select('.node-bar-label');
+
+    if (d.expanded) {
+      // Mede altura real do conteúdo (scrollHeight do div interno)
+      const wrapEl = sfo.select('.node-summary-wrap').node();
+      const measuredH = wrapEl ? Math.max(wrapEl.scrollHeight, 60) : 100;
+      d.expandedH = measuredH;
+      sfo.attr('height', measuredH + 2);
+      const fullH = h + barH + measuredH;
+      nodeRect.transition().duration(280).attr('height', fullH);
+      clipRect.transition().duration(280).attr('height', fullH);
+      sfo.style('pointer-events', 'auto')
+         .transition().duration(280).style('opacity', 1);
+      barLabel.text('FECHAR \u25b2');
+    } else {
+      const baseH = h + barH;
+      nodeRect.transition().duration(220).attr('height', baseH);
+      clipRect.transition().duration(220).attr('height', baseH);
+      sfo.style('pointer-events', 'none')
+         .transition().duration(220).style('opacity', 0);
+      barLabel.text('VER RESUMO \u25bc');
+    }
+    simulation.force('collision').radius(nd => {
+      const nlv  = Math.min(nd.level, 2);
+      const bH   = BAR_H_ARR[nlv];
+      const base = Math.max(NODE_W[nlv], NODE_H[nlv] + bH) / 2 + 38;
+      const expH = nd.expandedH || 100;
+      return nd.expanded ? base + expH / 2 + 10 : base;
+    });
+    simulation.alpha(0.15).restart();
+  }
+
+  function ticked() {
+    linksG.selectAll('path.link').attr('d', linkPath);
+    nodesG.selectAll('.node-group').attr('transform', d => `translate(${d.x||0},${d.y||0})`);
+  }
+
+  function fitToScreen(duration) {
+    if (!allNodes.length) return;
+    const pad = 70;
+    const xVals = allNodes.flatMap(d => { const w2=NODE_W[Math.min(d.level,2)]/2; return [d.x-w2, d.x+w2]; });
+    const yVals = allNodes.flatMap(d => { const lv=Math.min(d.level,2); return [d.y-NODE_H[lv]/2, d.y+NODE_H[lv]/2+BAR_H_ARR[lv]]; });
+    const x0=Math.min(...xVals), x1=Math.max(...xVals);
+    const y0=Math.min(...yVals), y1=Math.max(...yVals);
+    const dx=x1-x0, dy=y1-y0;
+    if (!dx || !dy) return;
+    const scale = Math.min((width - pad*2)/dx, (height - pad*2)/dy, 1.1);
+    const tx = (width  - scale*(x0+x1)) / 2;
+    const ty = (height - scale*(y0+y1)) / 2;
+    svg.transition().duration(duration||0).call(
+      zoomBehavior.transform,
+      d3.zoomIdentity.translate(tx, ty).scale(scale)
+    );
+  }
+
+  function runEntranceAnimation() {
+    fitToScreen(800);
+    nodesG.selectAll('.node-group').nodes().forEach((el, i) => {
+      gsap.fromTo(el,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, delay: i * 0.03, ease: 'power2.out',
+          onComplete() { el.style.removeProperty('opacity'); } }
+      );
+    });
+    gsap.fromTo(linksG.node(),
+      { opacity: 0 },
+      { opacity: 1, duration: 0.5, delay: 0.1, ease: 'power2.out',
+        onComplete() { linksG.node().style.removeProperty('opacity'); } }
+    );
+  }
+
+  function dragStarted(event, d) {
+    if (event.sourceEvent) event.sourceEvent.stopPropagation();
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragged(event, d)  { d.fx = event.x; d.fy = event.y; }
+  function dragEnded(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+
+  let activeNodeId = null;
+
+  function highlightNode(d) {
+    activeNodeId = d.id;
+    const conn = new Set([d.id]);
+    allLinks.forEach(l => {
+      const s = typeof l.source==='object' ? l.source.id : l.source;
+      const t = typeof l.target==='object' ? l.target.id : l.target;
+      if (s===d.id) conn.add(t);
+      if (t===d.id) conn.add(s);
+    });
+    linksG.selectAll('path.link')
+      .classed('faded',      l => { const s=typeof l.source==='object'?l.source.id:l.source; const t=typeof l.target==='object'?l.target.id:l.target; return s!==d.id&&t!==d.id; })
+      .classed('highlighted',l => { const s=typeof l.source==='object'?l.source.id:l.source; const t=typeof l.target==='object'?l.target.id:l.target; return s===d.id||t===d.id; });
+    nodesG.selectAll('.node-group').classed('faded', n => !conn.has(n.id));
+    nodesG.selectAll('.node-rect').attr('stroke',null).attr('stroke-width',null).attr('stroke-opacity',null);
+    nodesG.selectAll('.node-group').filter(n => n.id===d.id)
+      .select('.node-rect').attr('stroke','#fff').attr('stroke-width',3).attr('stroke-opacity',0.9);
+  }
+
+  function openPanel(d) {
+    const panel = document.getElementById('side-panel');
+    document.getElementById('panel-breadcrumb').textContent = d.axis ? `Eixo: ${d.axis}` : 'Núcleo Central';
+    const ew = document.getElementById('panel-eyebrow');
+    const icons  = {0:'globe',1:'layers',2:'file-text'};
+    const labels = {0:'núcleo',1:'eixo temático',2:'conceito'};
+    ew.innerHTML = `<i data-lucide="${icons[d.level]||'file-text'}"></i>${labels[d.level]||'conceito'}`;
+    if (window.lucide) lucide.createIcons({ rootElement: ew });
+    document.getElementById('panel-title').textContent = d.label.replace('\n',' ');
+    const body = document.getElementById('panel-body');
+    body.innerHTML = buildPanelHTML(d);
+    if (!panel.classList.contains('open')) {
+      panel.classList.add('open');
+      gsap.fromTo(panel, {x:420}, {x:0, duration:0.42, ease:'power3.out'});
+    } else {
+      gsap.fromTo(body, {opacity:0,y:8}, {opacity:1,y:0, duration:0.25, ease:'power2.out'});
+    }
+  }
+
+  function buildPanelHTML(d) {
+    if (!d.panel) return '<p>Sem conteúdo.</p>';
+    const secs = [
+      {key:'definition',      label:'Fundamentação',                   icon:'book-open'},
+      {key:'interdependence', label:'Conexão com Direitos Humanos & Sustentabilidade',icon:'link-2'},
+      {key:'reflection',      label:'Análise ',                 icon:'lightbulb'}
+    ];
+    return secs.map(s => !d.panel[s.key] ? '' : `
+      <div class="panel-section">
+        <div class="panel-section-label"><div class="section-marker"></div>${s.label}</div>
+        <p>${d.panel[s.key]}</p>
+      </div>`).join('');
+  }
+
+  function closePanel() {
+    activeNodeId = null;
+    const panel = document.getElementById('side-panel');
+    gsap.to(panel, {x:420, duration:0.35, ease:'power3.in', onComplete:()=>panel.classList.remove('open')});
+    nodesG.selectAll('.node-group').classed('faded',false);
+    nodesG.selectAll('.node-rect').attr('stroke',null).attr('stroke-width',null).attr('stroke-opacity',null);
+    linksG.selectAll('path.link').classed('faded',false).classed('highlighted',false);
+  }
+
+  document.getElementById('panel-close').addEventListener('click', closePanel);
+  svg.on('click', () => { if (document.getElementById('side-panel').classList.contains('open')) closePanel(); });
+
+  function dismissOnboarding() {
+    const el = document.getElementById('onboarding');
+    if (!el) return;
+    gsap.to(el, {opacity:0, duration:0.3, onComplete:()=>el.remove()});
+  }
+
+  window.addEventListener('resize', () => {
+    width  = document.getElementById('graph-area').offsetWidth;
+    height = document.getElementById('graph-area').offsetHeight;
+    if (simulation) simulation.force('center', d3.forceCenter(0,0)).restart();
+  });
+
+  window.addEventListener('DOMContentLoaded', () => {
+    width  = document.getElementById('graph-area').offsetWidth;
+    height = document.getElementById('graph-area').offsetHeight;
+    if (window.lucide) lucide.createIcons();
+    gsap.set('#side-panel', {x: 420});
+    svg.call(zoomBehavior.transform, d3.zoomIdentity.translate(width/2, height/2).scale(0.88));
+    buildGraph(graphData);
+    document.getElementById('help-fab').addEventListener('click', () => {
+      const p = document.getElementById('help-panel');
+      p.classList.toggle('open');
+      if (p.classList.contains('open') && window.lucide) lucide.createIcons({ rootElement: p });
+    });
+    document.getElementById('onboarding-btn').addEventListener('click', dismissOnboarding);
+    document.getElementById('onboarding').addEventListener('click', e => {
+      if (e.target === document.getElementById('onboarding')) dismissOnboarding();
+    });
+  });
+</script>
+</body>
+</html>
